@@ -7,7 +7,14 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+export default {
+  created() {
+    const eventsToRepopulate = localStorage.getItem('vuex')
+    this.$store.commit('events', JSON.parse(eventsToRepopulate).events);
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

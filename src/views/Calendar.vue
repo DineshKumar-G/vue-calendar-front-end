@@ -1,11 +1,9 @@
 
 <template>
   <div class="demo-app">
-    <!-- <div class='demo-app-top'>
-      <button @click="toggleWeekends">toggle weekends</button>
-      <button @click="gotoPast">go to a date in the past</button>
-      (also, click a date/time to add an event)
-    </div>-->
+    <div class="buttons">
+      <b-button class ="save" type="is-success" @click="pushToStore">Save!</b-button>
+    </div>
     <FullCalendar
       class="demo-app-calendar"
       ref="fullCalendar"
@@ -71,6 +69,23 @@ export default {
     };
   },
   methods: {
+    pushToStore() {
+      const tEvents = this.calendar.getEvents();
+      const arrToCommit = [];
+      for(const event of tEvents){
+        const objToCommit = {
+          title: event.title,
+          start: event.start,
+          color: event.backgroundColor,
+          id: event.id,
+          textColor: event.textColor,
+          borderColor: event.borderColor,
+          desc: event.extendedProps.desc
+        }
+        arrToCommit.push(objToCommit)
+      }
+      this.$store.commit('events', arrToCommit);
+    },
     eventCreate(infoObj) {
       if(this.purpose === 'Edit') { 
       let totatEvent = [];
@@ -117,21 +132,31 @@ export default {
     // // calendar.setOption('width', 100);
     // // calendar.setOption('aspectRatio', 1.1);
     // var ratio = calendar.getOption('aspectRatio');
-    let date = new Date();
-    for (let i = 1; i < 3; i++) {
-      date.setDate(date.getDate() + -i);
-      this.calendar.addEvent({
-        id: uuid(),
-        title: i +' Event',
-        extendedProps: {
-          desc: i + ' DESC',
-        },
-        start: date,
-        allDay: true,
-        color: 'yellow',   // an option!
-        textColor: 'black',
-        eventBorderColor: 'black',
-      });
+    const existingEvents = this.$store.state.events
+    console.log('...', existingEvents)
+    if(existingEvents){
+      for (let i = 0; i < existingEvents.length; i++) {
+        existingEvents[i].allDay= true,
+        this.calendar.addEvent(existingEvents[i]);
+      } 
+    }
+    if(!existingEvents){
+      let date = new Date();
+      for (let i = 1; i < 3; i++) {
+        date.setDate(date.getDate() + -i);
+        this.calendar.addEvent({
+          id: uuid(),
+          title: i +' Event',
+          extendedProps: {
+            desc: i + ' DESC',
+          },
+          start: date,
+          allDay: true,
+          color: 'yellow',
+          textColor: 'black',
+          borderColor: 'black',
+        });
+      } 
     }
   }
 };
@@ -167,5 +192,10 @@ export default {
 }
 .fc-day-number {
   font-size: 20px;
+}
+.save {
+  position: absolute;
+  right: 20%;
+  top: 2%;
 }
 </style>
