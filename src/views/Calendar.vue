@@ -152,7 +152,7 @@ export default {
           id: uuid(),
           title:'Example Event'+ i ,
           extendedProps: {
-            desc:'This is a sample description, You can have events with title and descripitions, you can drag and drop them to different dates and you can edit the meta data they contain!, suggestions are welcome!',
+            desc:'This is a sample description, You can have events with title and descripitions, you can drag and drop them to different dates and you can edit the meta data they contain! suggestions are welcome!',
           },
           start: date,
           allDay: true,
@@ -208,7 +208,7 @@ export default {
    .save {
     position: absolute;
     right: 10%;
-    top: 0%;
+    top: -10px;
   }
   }
 </style>
