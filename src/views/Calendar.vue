@@ -202,13 +202,13 @@ export default {
   right: 20%;
   top: 4%;
 }
-  // @media only screen and (min-device-width: 480px) 
-  //                    and (max-device-width: 640px) 
-  //                    and (orientation: landscape) {
-  //  .save {
-  //   position: absolute;
-  //   right: 10%;
-  //   top: 0%;
-  // }
-  // }
+  @media only screen and (min-device-width: 480px) 
+                     and (max-device-width: 640px) 
+                     and (orientation: landscape) {
+   .save {
+    position: absolute;
+    right: 10%;
+    top: 0%;
+  }
+  }
 </style>
