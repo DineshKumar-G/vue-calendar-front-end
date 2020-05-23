@@ -23,12 +23,15 @@
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }"
+      :editable='true'
       :plugins="calendarPlugins"
       :weekends="calendarWeekends"
       :events="calendarEvents"
       eventLimit="{eventLimit: true}"
       @dateClick="handleDateClick"
       @eventClick="eventClicked"
+      @eventDragStart="dragStart"
+      @eventDrop ="dragDrop"
     />
     <b-modal :active.sync="isComponentModalActive" :canCancel="false" has-modal-card>
       <modal-form @close="isComponentModalActive = false" @save="eventCreate" :arg="argToCreate" :mode="purpose"></modal-form>
@@ -69,7 +72,19 @@ export default {
   },
   methods: {
     eventCreate(infoObj) {
-      this.calendarEvents.push(infoObj);
+      if(this.purpose === 'Edit') { 
+      let totatEvent = [];
+      totatEvent.push(this.calendar.getEvents());
+        totatEvent[0].forEach(element => {
+          if(element.id === infoObj.id){
+            let eventToEdit = this.calendar.getEventById( infoObj.id )
+            eventToEdit.setProp('title', infoObj.title)
+            eventToEdit.setProp('backgroundColor', infoObj.color)
+            eventToEdit.setExtendedProp('desc', infoObj.extendedProps.desc)
+          }
+        });
+      }
+      else this.calendarEvents.push(infoObj);
     },
     toggleWeekends() {
       this.calendarWeekends = !this.calendarWeekends; // update a property
@@ -86,6 +101,12 @@ export default {
       this.purpose = 'Edit';
       this.argToCreate = ev
       this.isComponentModalActive = true;
+    },
+    dragStart(ev){
+      console.log('Drag STARTED!!', ev)
+    },
+    dragDrop(ev){
+      console.log('Drag Stopped!!', ev)
     }
   },
   async created() {
@@ -97,7 +118,7 @@ export default {
     // // calendar.setOption('aspectRatio', 1.1);
     // var ratio = calendar.getOption('aspectRatio');
     let date = new Date();
-    for (let i = 1; i < 15; i++) {
+    for (let i = 1; i < 3; i++) {
       date.setDate(date.getDate() + -i);
       this.calendar.addEvent({
         id: uuid(),
@@ -111,7 +132,7 @@ export default {
         textColor: 'black',
         eventBorderColor: 'black',
       });
-  }
+    }
   }
 };
 </script>

@@ -49,7 +49,7 @@ export default {
   name: 'MoveModal',
   components: {
   },
-  props: ['arg', 'mode'],
+  props: ['arg', 'mode', 'calendar'],
   data(){
     return{
       newEventTitle: '',
@@ -65,12 +65,12 @@ export default {
   methods: {
     save() {
       const objToPass = {
-        id: uuid(),
+        id: this.mode === 'Add' ? uuid() : this.arg.event.id,
         title: this.newEventTitle,
         extendedProps: {
           desc: this.newEventDesc,
         },
-        start: this.arg.date,
+        start: this.mode === 'Add' ? this.arg.date : this.arg.event.start,
         allDay: true,
         color: this.newEventColor,
         borderColor: 'black'
