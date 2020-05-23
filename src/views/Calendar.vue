@@ -32,7 +32,7 @@
       @eventDrop ="dragDrop"
     />
     <b-modal :active.sync="isComponentModalActive" :canCancel="false" has-modal-card>
-      <modal-form @close="isComponentModalActive = false" @save="eventCreate" :arg="argToCreate" :mode="purpose"></modal-form>
+      <modal-form @close="isComponentModalActive = false" @save="eventCreate" :arg="argToCreate" :mode="purpose" @remove="removeEvent"></modal-form>
     </b-modal>
   </div>
 </template>
@@ -86,6 +86,10 @@ export default {
       }
       this.$store.commit('events', arrToCommit);
     },
+    removeEvent(id){
+      let eventToRemove = this.calendar.getEventById( id )
+      eventToRemove.remove()
+    },
     eventCreate(infoObj) {
       if(this.purpose === 'Edit') { 
       let totatEvent = [];
@@ -109,6 +113,7 @@ export default {
       calendarApi.gotoDate("2000-01-01"); // call a method on the Calendar object
     },
     handleDateClick(arg) {
+      this.purpose = 'Add';
       this.argToCreate = arg;
       this.isComponentModalActive = true;
     },
@@ -132,28 +137,27 @@ export default {
     // // calendar.setOption('width', 100);
     // // calendar.setOption('aspectRatio', 1.1);
     // var ratio = calendar.getOption('aspectRatio');
-    const existingEvents = this.$store.state.events
-    console.log('...', existingEvents)
-    if(existingEvents){
+    const existingEvents = this.$store.state.events;
+    if(existingEvents.length){
       for (let i = 0; i < existingEvents.length; i++) {
         existingEvents[i].allDay= true,
         this.calendar.addEvent(existingEvents[i]);
       } 
     }
-    if(!existingEvents){
+    else{
       let date = new Date();
       for (let i = 1; i < 3; i++) {
         date.setDate(date.getDate() + -i);
         this.calendar.addEvent({
           id: uuid(),
-          title: i +' Event',
+          title:'Example Event'+ i ,
           extendedProps: {
-            desc: i + ' DESC',
+            desc:'This is a sample description, You can have events with title and descripitions, you can drag and drop them to different dates and you can edit the meta data they contain!, suggestions are welcome!',
           },
           start: date,
           allDay: true,
-          color: 'yellow',
-          textColor: 'black',
+          // color: 'yellow',
+          textColor: 'white',
           borderColor: 'black',
         });
       } 
@@ -196,6 +200,15 @@ export default {
 .save {
   position: absolute;
   right: 20%;
-  top: 2%;
+  top: 4%;
 }
+  // @media only screen and (min-device-width: 480px) 
+  //                    and (max-device-width: 640px) 
+  //                    and (orientation: landscape) {
+  //  .save {
+  //   position: absolute;
+  //   right: 10%;
+  //   top: 0%;
+  // }
+  // }
 </style>

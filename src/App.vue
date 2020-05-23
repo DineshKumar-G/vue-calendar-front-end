@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+        <span class="has-text-danger has-text-weight-bold">'Zoom out' browser to 67%, if on mobile try with 'Desktop site' option on for better results!</span>
     <!-- <div id="nav">
       <router-link to="/">Calendar</router-link> |
       <router-link to="/about">About</router-link>

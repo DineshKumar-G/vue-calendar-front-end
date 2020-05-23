@@ -3,7 +3,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 // import Home from '../views/Home.vue';
 import Calendar from '../views/Calendar.vue';
-import test from '../views/test.vue';
 
 Vue.use(VueRouter);
 
@@ -12,11 +11,6 @@ const routes = [
     path: '/',
     name: 'Calendar',
     component: Calendar,
-  },
-  {
-    path: '/test',
-    name: 'test',
-    component: test,
   },
   // {
   //   path: '/about',
