@@ -2,7 +2,8 @@
 <template>
   <div class="demo-app">
     <div class="buttons">
-      <b-button class ="save" type="is-success" @click="pushToStore">Save!</b-button>
+      <b-button 
+      v-bind:class="{'save': !isMobile}"  type="is-success" @click="pushToStore">Save!</b-button>
     </div>
     <FullCalendar
       class="demo-app-calendar"
@@ -57,6 +58,7 @@ export default {
       calendar: {},
       isComponentModalActive: false,
       purpose: 'Add',
+      isMobile: false,
       argToCreate: {},
       calendarPlugins: [
         // plugins must be defined in the JS
@@ -130,6 +132,7 @@ export default {
     }
   },
   async created() {
+    if(navigator.maxTouchPoints > 1) this.isMobile = true
     await this.$nextTick();
     this.calendar = this.$refs.fullCalendar.getApi();
     // // calendar.setOption('contentHeight', 600);
