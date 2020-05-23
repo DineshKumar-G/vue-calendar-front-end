@@ -206,8 +206,6 @@ export default {
                      and (max-device-width: 640px) 
                      and (orientation: landscape) {
    .save {
-    position: absolute;
-    right: 10%;
     top: -10px;
   }
   }
