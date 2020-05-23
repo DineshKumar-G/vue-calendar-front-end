@@ -17,7 +17,6 @@ export default new Vuex.Store({
   },
   mutations: {
     events: (state,  events ) => {
-      console.log('stroe', events)
       state.events = events;
     },
   },
