@@ -31,6 +31,7 @@
       @eventClick="eventClicked"
       @eventDragStart="dragStart"
       @eventDrop ="dragDrop"
+      @eventResize="resizeEnd"
     />
     <b-modal :active.sync="isComponentModalActive" :canCancel="false" has-modal-card>
       <modal-form @close="isComponentModalActive = false" @save="eventCreate" :arg="argToCreate" :mode="purpose" @remove="removeEvent"></modal-form>
@@ -78,6 +79,7 @@ export default {
         const objToCommit = {
           title: event.title,
           start: event.start,
+          end: event.end,
           color: event.backgroundColor,
           id: event.id,
           textColor: event.textColor,
@@ -99,8 +101,9 @@ export default {
         totatEvent[0].forEach(element => {
           if(element.id === infoObj.id){
             let eventToEdit = this.calendar.getEventById( infoObj.id )
+            eventToEdit.setProp('end', infoObj.end)
             eventToEdit.setProp('title', infoObj.title)
-            eventToEdit.setProp('backgroundColor', infoObj.color)
+            eventToEdit.setProp('backgroundColor', infoObj.color || infoObj.backgroundColor)
             eventToEdit.setExtendedProp('desc', infoObj.extendedProps.desc)
           }
         });
@@ -129,6 +132,10 @@ export default {
     },
     dragDrop(ev){
       console.log('Drag Stopped!!', ev)
+    },
+    resizeEnd(ev) {
+      this.purpose = 'Edit'
+      this.eventCreate(ev.event)
     }
   },
   async created() {
@@ -136,7 +143,7 @@ export default {
     await this.$nextTick();
     this.calendar = this.$refs.fullCalendar.getApi();
     // // calendar.setOption('contentHeight', 600);
-    this.calendar.setOption("height", 1000);
+    this.calendar.setOption("height", 1300);
     // // calendar.setOption('width', 100);
     // // calendar.setOption('aspectRatio', 1.1);
     // var ratio = calendar.getOption('aspectRatio');
@@ -149,20 +156,27 @@ export default {
     }
     else{
       let date = new Date();
-      for (let i = 1; i < 3; i++) {
-        date.setDate(date.getDate() + -i);
-        this.calendar.addEvent({
+      let edDate = new Date();
+      edDate.setDate(edDate.getDate() + 4)
+      const evObj = {
           id: uuid(),
-          title:'Example Event'+ i ,
+          title: 'Example Long event',
           extendedProps: {
             desc:'This is a sample description, You can have events with title and descripitions, you can drag and drop them to different dates and you can edit the meta data they contain! suggestions are welcome!',
           },
           start: date,
+          end: edDate,
           allDay: true,
           // color: 'yellow',
           textColor: 'white',
           borderColor: 'black',
-        });
+        };
+      this.calendar.addEvent(evObj);
+      delete evObj.end;
+      for (let i = 1; i < 10; i++) {
+        evObj.date = date.setDate(date.getDate() + -i);
+        evObj.title = 'Example Event - '+ i;
+        this.calendar.addEvent(evObj);
       } 
     }
   }
@@ -199,6 +213,18 @@ export default {
 }
 .fc-day-number {
   font-size: 20px;
+}
+.fc-event-container {
+  padding: 2px !important;
+}
+.fc-event {
+  height: 40px;
+}
+.fc-popover, .fc-more-popover {
+  width: 20%
+}
+.fc-title {
+  padding: 1px 10px 0px;
 }
 .save {
   position: absolute;
