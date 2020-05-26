@@ -167,12 +167,13 @@ export default {
           start: date,
           end: edDate,
           allDay: true,
-          // color: 'yellow',
+          color: 'red',
           textColor: 'white',
           borderColor: 'black',
         };
       this.calendar.addEvent(evObj);
       delete evObj.end;
+      delete evObj.color;
       for (let i = 1; i < 10; i++) {
         evObj.id = uuid();
         evObj.date = date.setDate(date.getDate() + -i);
