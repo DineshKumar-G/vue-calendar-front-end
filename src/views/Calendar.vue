@@ -174,6 +174,7 @@ export default {
       this.calendar.addEvent(evObj);
       delete evObj.end;
       for (let i = 1; i < 10; i++) {
+        evObj.id = uuid();
         evObj.date = date.setDate(date.getDate() + -i);
         evObj.title = 'Example Event - '+ i;
         this.calendar.addEvent(evObj);
