@@ -1,10 +1,6 @@
 
 <template>
   <div class="demo-app">
-    <div class="buttons">
-      <b-button 
-      v-bind:class="{'save': !isMobile}"  type="is-success" @click="pushToStore">Save!</b-button>
-    </div>
     <FullCalendar
       class="demo-app-calendar"
       ref="fullCalendar"
@@ -72,7 +68,8 @@ export default {
     };
   },
   methods: {
-    pushToStore() {
+    async pushToStore() {
+      await this.$nextTick();
       const tEvents = this.calendar.getEvents();
       const arrToCommit = [];
       for(const event of tEvents){
@@ -93,8 +90,9 @@ export default {
     removeEvent(id){
       let eventToRemove = this.calendar.getEventById( id )
       eventToRemove.remove()
+      this.pushToStore();
     },
-    eventCreate(infoObj) {
+    async eventCreate(infoObj) {
       if(this.purpose === 'Edit') { 
       let totatEvent = [];
       totatEvent.push(this.calendar.getEvents());
@@ -109,6 +107,7 @@ export default {
         });
       }
       else this.calendarEvents.push(infoObj);
+      this.pushToStore();
     },
     toggleWeekends() {
       this.calendarWeekends = !this.calendarWeekends; // update a property
@@ -132,10 +131,12 @@ export default {
     },
     dragDrop(ev){
       console.log('Drag Stopped!!', ev)
+      this.pushToStore();
     },
     resizeEnd(ev) {
       this.purpose = 'Edit'
       this.eventCreate(ev.event)
+      this.pushToStore();
     }
   },
   async created() {
@@ -154,33 +155,6 @@ export default {
         this.calendar.addEvent(existingEvents[i]);
       } 
     }
-    else{
-      let date = new Date();
-      let edDate = new Date();
-      edDate.setDate(edDate.getDate() + 4)
-      const evObj = {
-          id: uuid(),
-          title: 'Example Long event',
-          extendedProps: {
-            desc:'This is a sample description, You can have events with title and descripitions, you can drag and drop them to different dates and you can edit the meta data they contain! suggestions are welcome!',
-          },
-          start: date,
-          end: edDate,
-          allDay: true,
-          color: 'red',
-          textColor: 'white',
-          borderColor: 'black',
-        };
-      this.calendar.addEvent(evObj);
-      delete evObj.end;
-      delete evObj.color;
-      for (let i = 1; i < 10; i++) {
-        evObj.id = uuid();
-        evObj.date = date.setDate(date.getDate() + -i);
-        evObj.title = 'Example Event - '+ i;
-        this.calendar.addEvent(evObj);
-      } 
-    }
   }
 };
 </script>
@@ -197,6 +171,10 @@ export default {
 .demo-app {
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
+}
+.fc-button {
+  text-transform: capitalize;
+  font-size: 1.2rem;
 }
 
 .demo-app-top {

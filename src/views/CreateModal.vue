@@ -18,21 +18,20 @@
           required
         ></textarea>
       </b-field>
-      <b-dropdown aria-role="list" v-model="newEventColor">
+      <!-- <b-dropdown aria-role="list" v-model="newEventColor">-->
         <button
-          class="button"
-          :class="buttonColorMap[newEventColor]"
-          slot="trigger"
-          slot-scope="{ active }"
-        >
-          <!-- <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon> -->
-          <span>{{ newEventColor ? newEventColor.toUpperCase() : 'Select a Color!' }}</span>
-        </button>
+          class="button has-text-white has-text-weight-bold clr-btn"
+          @click="isColorModalActive = !isColorModalActive"
+        >Choose a Color!</button>
+          <!--
 
         <b-dropdown-item aria-role="listitem" value="red">Red</b-dropdown-item>
         <b-dropdown-item aria-role="listitem" value="blue">Blue</b-dropdown-item>
         <b-dropdown-item aria-role="listitem" value="green">Green</b-dropdown-item>
-      </b-dropdown>
+      </b-dropdown> -->
+      <b-modal :active.sync="isColorModalActive" has-modal-card>
+        <color-picker v-model="newEventColor"></color-picker>
+      </b-modal>
     </section>
     <footer class="modal-card-foot">
       <div class="columns is-fullwidth">
@@ -58,23 +57,22 @@
 
 
 <script>
+import ColorPicker from 'vue-color-picker-wheel';
 import uuid from "uuid/v4";
 import _ from "lodash";
 
 export default {
   name: "MoveModal",
-  components: {},
+  components: {
+    ColorPicker
+  },
   props: ["arg", "mode", "calendar"],
   data() {
     return {
       newEventTitle: "",
       newEventDesc: "",
       newEventColor: "",
-      buttonColorMap: {
-        red: "is-danger",
-        blue: "is-link",
-        green: "is-success"
-      }
+      isColorModalActive: false,
     };
   },
   methods: {
@@ -129,5 +127,13 @@ export default {
 }
 .save-btn {
   left: 150%;
+}
+.clr-btn{
+height: 50px;
+background: #ff3232;
+background: -moz-linear-gradient(-45deg, #ff3232 0%, #ff3030 50%, #282fff 51%, #005dff 100%);
+background: -webkit-linear-gradient(-45deg, #ff3232 0%,#ff3030 50%,#282fff 51%,#005dff 100%);
+background: linear-gradient(135deg, #ff3232 0%,#ff3030 50%,#282fff 51%,#005dff 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3232', endColorstr='#005dff',GradientType=1 );
 }
 </style>
